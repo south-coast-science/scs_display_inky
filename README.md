@@ -1,6 +1,20 @@
 # scs_display_inky
 Display abstractions for the Inky pHAT electronic paper screen adapter.
 
+_Contains library classes only._
+
+**Required libraries:** 
+
+* to be done
+
+
+**Branches:**
+
+The stable branch of this repository is master. For deployment purposes, use:
+```
+git clone --branch=master https://github.com/south-coast-science/scs_display_inky.git
+```
+
 ### Resources ###
 
 #### Software ####
