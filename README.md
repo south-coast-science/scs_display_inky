@@ -5,7 +5,7 @@ _Contains library classes only._
 
 **Required libraries:** 
 
-* to be done
+* Third party: einky
 
 
 **Branches:**
@@ -20,12 +20,10 @@ git clone --branch=master https://github.com/south-coast-science/scs_display_ink
 #### Software ####
 
 * [Pimoroni: Getting Started with Inky pHAT](https://learn.pimoroni.com/tutorial/sandyj/getting-started-with-inky-phat)
-
 * [GitHub: Python library for Inky pHAT](https://github.com/pimoroni/inky)  
 
 
 #### Hardware ####
 
 * [Pimoroni: Black/White – Inky pHAT](https://shop.pimoroni.com/products/inky-phat)  
-
 * [Pin-out: Inky pHAT](https://pinout.xyz/pinout/inky_phat)  
