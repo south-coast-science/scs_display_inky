@@ -28,4 +28,4 @@ git clone --branch=master https://github.com/south-coast-science/scs_display_ink
 
 * [Pimoroni: Black/White – Inky pHAT](https://shop.pimoroni.com/products/inky-phat)  
 
-* [Pinout: Inky pHAT](https://pinout.xyz/pinout/inky_phat)  
+* [Pin-out: Inky pHAT](https://pinout.xyz/pinout/inky_phat)  
