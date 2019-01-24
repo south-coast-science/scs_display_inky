@@ -1,5 +1,5 @@
 # scs_display_inky
-Display abstractions for the Inky pHAT electronic paper screen adapter.
+Display abstractions for the Pimoroni Inky pHAT electronic ink screen adapter.
 
 _Contains library classes only._
 
