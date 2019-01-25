@@ -1,11 +1,11 @@
 # scs_display_inky
-Display abstractions for the Inky pHAT electronic paper screen adapter.
+Display abstractions for the Pimoroni Inky pHAT electronic ink screen adapter.
 
 _Contains library classes only._
 
 **Required libraries:** 
 
-* to be done
+* Third party: einky, numpy
 
 
 **Branches:**
@@ -20,12 +20,10 @@ git clone --branch=master https://github.com/south-coast-science/scs_display_ink
 #### Software ####
 
 * [Pimoroni: Getting Started with Inky pHAT](https://learn.pimoroni.com/tutorial/sandyj/getting-started-with-inky-phat)
-
 * [GitHub: Python library for Inky pHAT](https://github.com/pimoroni/inky)  
-
+* [Pillow](https://pillow.readthedocs.io/en/stable/)
 
 #### Hardware ####
 
 * [Pimoroni: Black/White – Inky pHAT](https://shop.pimoroni.com/products/inky-phat)  
-
-* [Pinout: Inky pHAT](https://pinout.xyz/pinout/inky_phat)  
+* [Pin-out: Inky pHAT](https://pinout.xyz/pinout/inky_phat)  
