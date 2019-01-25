@@ -5,7 +5,7 @@ _Contains library classes only._
 
 **Required libraries:** 
 
-* Third party: einky
+* Third party: einky, numpy
 
 
 **Branches:**
@@ -21,7 +21,7 @@ git clone --branch=master https://github.com/south-coast-science/scs_display_ink
 
 * [Pimoroni: Getting Started with Inky pHAT](https://learn.pimoroni.com/tutorial/sandyj/getting-started-with-inky-phat)
 * [GitHub: Python library for Inky pHAT](https://github.com/pimoroni/inky)  
-
+* [Pillow](https://pillow.readthedocs.io/en/stable/)
 
 #### Hardware ####
 
