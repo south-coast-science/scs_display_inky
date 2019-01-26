@@ -5,6 +5,8 @@ Created on 25 Jan 2019
 
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
 
+https://github.com/simonbugler/inkyphat
+
 https://stackoverflow.com/questions/23734318/fails-to-run-a-simple-pillow-example-cant-find-arial-pil
 
 https://www.raspberrypi.org/forums/viewtopic.php?t=203775
@@ -20,7 +22,6 @@ from inky import InkyPHAT
 # --------------------------------------------------------------------------------------------------------------------
 
 print("hello world...")
-
 
 inky_display = InkyPHAT("yellow")
 inky_display.set_border(inky_display.BLACK)
