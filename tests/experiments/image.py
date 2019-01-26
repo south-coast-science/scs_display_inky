@@ -19,7 +19,6 @@ from inky import InkyPHAT
 
 print("image...")
 
-
 inky_display = InkyPHAT("yellow")
 inky_display.set_border(inky_display.WHITE)
 
