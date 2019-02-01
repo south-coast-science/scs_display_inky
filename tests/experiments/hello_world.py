@@ -14,6 +14,8 @@ https://stackoverflow.com/questions/54200850/attributeerror-tuple-object-has-no-
 https://www.cufonfonts.com/font/helvetica-2
 """
 
+import time
+
 from PIL import Image, ImageFont, ImageDraw
 
 from inky import InkyPHAT
@@ -21,9 +23,11 @@ from inky import InkyPHAT
 
 # --------------------------------------------------------------------------------------------------------------------
 
+colour = "black"            # yellow
+
 print("hello world...")
 
-inky_display = InkyPHAT("yellow")
+inky_display = InkyPHAT(colour)
 inky_display.set_border(inky_display.BLACK)
 
 img = Image.new("P", (inky_display.WIDTH, inky_display.HEIGHT))
@@ -44,5 +48,10 @@ y = (inky_display.HEIGHT / 2) - (h / 2)
 
 draw.text((x, y), message, inky_display.BLACK, font)
 
+start_time = time.time()
+
 inky_display.set_image(img)
 inky_display.show()
+
+elapsed_time = time.time() - start_time
+print("elapsed: %0.3f" % elapsed_time)
