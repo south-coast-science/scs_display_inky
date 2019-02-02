@@ -10,6 +10,8 @@ https://stackoverflow.com/questions/54200850/attributeerror-tuple-object-has-no-
 https://www.cufonfonts.com/font/helvetica-2
 """
 
+import time
+
 from PIL import Image
 
 from inky import InkyPHAT
@@ -17,12 +19,19 @@ from inky import InkyPHAT
 
 # --------------------------------------------------------------------------------------------------------------------
 
+colour = "black"            # yellow
+
 print("image...")
 
-inky_display = InkyPHAT("yellow")
+inky_display = InkyPHAT(colour)
 inky_display.set_border(inky_display.WHITE)
 
-img = Image.open("/home/pi/SCS/scs_display_inky/tests/resources/scs_logo_square_inky.png")
+img = Image.open("resources/scs_logo_square_inky.png")
+
+start_time = time.time()
 
 inky_display.set_image(img)
 inky_display.show()
+
+elapsed_time = time.time() - start_time
+print("elapsed: %0.3f" % elapsed_time)
