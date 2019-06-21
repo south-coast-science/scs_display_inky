@@ -4,6 +4,8 @@ Created on 20 Jun 2019
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
 """
 
+import time
+
 from PIL import Image, ImageDraw
 
 from inky import InkyPHAT
@@ -17,6 +19,8 @@ class Display(object):
     """
 
     COLOUR =        "black"
+
+    CLEAR_TIME =        1       # seconds
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -44,11 +48,9 @@ class Display(object):
 
 
     def render(self):
-        # display current image...
         self.__device.set_image(self.__image)
         self.__device.show()
 
-        # prepare new image...
         self.__clear()
 
 
@@ -57,6 +59,8 @@ class Display(object):
     def __clear(self):
         self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
         self.__drawing = ImageDraw.Draw(self.__image)
+
+        time.sleep(self.CLEAR_TIME)
 
 
     # ----------------------------------------------------------------------------------------------------------------

@@ -54,13 +54,15 @@ class TextDisplay(object):
 
     def render(self):
         if self.__buffer == self.__screen:
-            return
+            return False
 
         for row in range(self.text_height):
             self.__screen[row] = self.__buffer[row]
 
         self.__display.draw_text(self.__screen)
         self.__display.render()
+
+        return True
 
 
     # ----------------------------------------------------------------------------------------------------------------

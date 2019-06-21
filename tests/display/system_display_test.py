@@ -24,13 +24,14 @@ print("-")
 
 try:
     while True:
-        time.sleep(1)
+        time.sleep(5)
         display.update()
 
 except KeyboardInterrupt:
     pass
 
-display.clear("STANDBY")
+display.status = "STANDBY"
+display.clear()
 display.print()
 print("-")
 

@@ -77,16 +77,14 @@ class SystemDisplay(object):
         self.__datetime = LocalizedDatetime.now()
         # TODO: network info here
 
-        self.render()
+        return self.render()
 
 
-    def clear(self, status):
+    def clear(self):
         self.__datetime = None
         self.__homes = {}
 
-        self.__status = status
-
-        self.render()
+        return self.render()
 
 
     def render(self):
@@ -112,7 +110,7 @@ class SystemDisplay(object):
         self.__display.set_text(8, "")
         self.__display.set_text(9, self.__status, True)
 
-        self.__display.render()
+        return self.__display.render()
 
 
     # ----------------------------------------------------------------------------------------------------------------
