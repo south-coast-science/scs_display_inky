@@ -11,7 +11,7 @@ from scs_display.display.display import Display
 
 # --------------------------------------------------------------------------------------------------------------------
 
-class BufferedDisplay(object):
+class TextDisplay(object):
     """
     classdocs
     """
@@ -40,7 +40,7 @@ class BufferedDisplay(object):
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def set_row(self, row, text, right_justify=False):
+    def set_text(self, row, text, right_justify=False):
         if not 0 <= row < self.text_height:
             raise ValueError("row out of range: %s" % row)
 
@@ -55,7 +55,6 @@ class BufferedDisplay(object):
 
     def render(self):
         if self.__buffer == self.__screen:
-            print("nothing to render")
             return
 
         for row in range(self.text_height):
@@ -90,4 +89,5 @@ class BufferedDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def __str__(self, *args, **kwargs):
-        return "Display:{display:%s, buffer:%s, screen:%s}" % (self.__display, self.__buffer, self.__screen)
+        return "TextDisplay:{display:%s, buffer:%s, screen:%s}" % \
+               (self.__display, self.__buffer, self.__screen)

@@ -29,7 +29,7 @@ class Display(object):
         self.__device = InkyPHAT(self.COLOUR)
 
         self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
-        self.__surface = ImageDraw.Draw(self.__image)
+        self.__drawing = ImageDraw.Draw(self.__image)
 
         m_width, m_height = self.__font.getsize("M")
 
@@ -42,7 +42,7 @@ class Display(object):
     def draw_text(self, buffer):
         for row in range(len(buffer)):
             y_offset = row * self.__text_height
-            self.__surface.text((0, y_offset), buffer[row], self.__device.BLACK, self.__font)
+            self.__drawing.text((0, y_offset), buffer[row], self.__device.BLACK, self.__font)
 
 
     def render(self):
