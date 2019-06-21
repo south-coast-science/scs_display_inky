@@ -45,8 +45,7 @@ class TextDisplay(object):
             raise ValueError("row out of range: %s" % row)
 
         if right_justify:
-            fmt = "%" + str(self.text_width) + "s"
-            text = fmt % text
+            text = ("%" + str(self.text_width) + "s") % text
 
         self.__buffer[row] = text[:self.text_width]
 

@@ -4,8 +4,6 @@
 Created on 20 Jun 2019
 """
 
-import time
-
 from PIL import ImageFont
 
 from scs_core.data.localized_datetime import LocalizedDatetime

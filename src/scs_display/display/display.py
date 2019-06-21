@@ -27,9 +27,7 @@ class Display(object):
         self.__font = font
 
         self.__device = InkyPHAT(self.COLOUR)
-
-        self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
-        self.__drawing = ImageDraw.Draw(self.__image)
+        self.__clear()
 
         m_width, m_height = self.__font.getsize("M")
 
@@ -46,8 +44,19 @@ class Display(object):
 
 
     def render(self):
+        # display current image...
         self.__device.set_image(self.__image)
         self.__device.show()
+
+        # prepare new image...
+        self.__clear()
+
+
+    # ----------------------------------------------------------------------------------------------------------------
+
+    def __clear(self):
+        self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
+        self.__drawing = ImageDraw.Draw(self.__image)
 
 
     # ----------------------------------------------------------------------------------------------------------------
