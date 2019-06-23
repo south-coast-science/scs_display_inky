@@ -4,6 +4,8 @@ Created on 21 Jun 2019
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
 """
 
+import sys
+
 from collections import OrderedDict
 from multiprocessing import Manager
 
@@ -22,14 +24,14 @@ class SystemMonitor(SynchronisedProcess):
     classdocs
     """
 
-    UPDATE_INTERVAL =       1       # seconds
+    UPDATE_INTERVAL =       1.0       # seconds
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def construct(cls, model, startup_message, shutdown_message):
-        display = SystemDisplay.construct(model, startup_message)
+    def construct(cls, device_name, startup_message, shutdown_message):
+        display = SystemDisplay.construct(device_name, startup_message)
 
         return cls(display, shutdown_message)
 
@@ -52,6 +54,9 @@ class SystemMonitor(SynchronisedProcess):
     # SynchronisedProcess implementation...
 
     def stop(self):
+        print("SystemMonitor: stop", file=sys.stderr)
+        sys.stderr.flush()
+
         self.__display.status = self.__shutdown_message
         self.__display.clear()
 
@@ -59,6 +64,9 @@ class SystemMonitor(SynchronisedProcess):
 
 
     def run(self):
+        print("SystemMonitor: run", file=sys.stderr)
+        sys.stderr.flush()
+
         try:
             timer = IntervalTimer(self.UPDATE_INTERVAL)
 

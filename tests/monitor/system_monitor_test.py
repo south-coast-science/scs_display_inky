@@ -2,6 +2,10 @@
 
 """
 Created on 21 Jun 2019
+
+@author: Bruno Beloff (bruno.beloff@southcoastscience.com)
+
+https://stackoverflow.com/questions/1112343/how-do-i-capture-sigint-in-python
 """
 
 import sys
@@ -26,7 +30,6 @@ try:
         message = line.strip()
 
         monitor.set_status(SystemStatus(message))
-        print(monitor)
 
 except KeyboardInterrupt:
     pass

@@ -45,23 +45,23 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def construct(cls, model, status):
+    def construct(cls, device_name, status):
         datetime = LocalizedDatetime.now()
 
         tag = cls.system_tag()
         host = cls.system_hostname()
         homes = {}
 
-        return cls(model, datetime, tag, host, homes, status)
+        return cls(device_name, datetime, tag, host, homes, status)
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def __init__(self, model, datetime, tag, host, homes, status):
+    def __init__(self, device_name, datetime, tag, host, homes, status):
         """
         Constructor
         """
-        self.__model = model                            # string
+        self.__device_name = device_name                # string
         self.__datetime = datetime                      # string
         self.__tag = tag                                # string
         self.__host = host                              # string
@@ -88,7 +88,7 @@ class SystemDisplay(object):
 
 
     def render(self):
-        self.__display.set_text(0, self.__model, True)
+        self.__display.set_text(0, self.__device_name, True)
         self.__display.set_text(1, self.formatted_datetime, True)
         self.__display.set_text(2, "")
         self.__display.set_text(3, "  tag: %s" % self.__tag)
@@ -144,5 +144,7 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def __str__(self, *args, **kwargs):
-        return "SystemDisplay:{model:%s, datetime:%s, tag:%s, host:%s, homes:%s, status:%s, display:%s}" % \
-               (self.__model, self.__datetime, self.__tag, self.__host, self.__homes, self.__status, self.__display)
+        return "SystemDisplay:{device_name:%s, datetime:%s, tag:%s, host:%s, homes:%s, status:%s, " \
+               "display:%s}" % \
+               (self.__device_name, self.__datetime, self.__tag, self.__host, self.__homes, self.__status,
+                self.__display)

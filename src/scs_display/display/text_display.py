@@ -59,6 +59,7 @@ class TextDisplay(object):
         for row in range(self.text_height):
             self.__screen[row] = self.__buffer[row]
 
+        self.__display.clear()
         self.__display.draw_text(self.__screen)
         self.__display.render()
 

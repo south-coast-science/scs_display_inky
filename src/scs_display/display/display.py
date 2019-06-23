@@ -18,9 +18,8 @@ class Display(object):
     classdocs
     """
 
-    COLOUR =        "black"
-
-    CLEAR_TIME =        1       # seconds
+    COLOUR =            "black"
+    CLEAR_TIME =        1.0         # seconds
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -31,7 +30,9 @@ class Display(object):
         self.__font = font
 
         self.__device = InkyPHAT(self.COLOUR)
-        self.__clear()
+
+        self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
+        self.__drawing = ImageDraw.Draw(self.__image)
 
         m_width, m_height = self.__font.getsize("M")
 
@@ -40,6 +41,13 @@ class Display(object):
 
 
     # ----------------------------------------------------------------------------------------------------------------
+
+    def clear(self):
+        self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
+        self.__drawing = ImageDraw.Draw(self.__image)
+
+        time.sleep(self.CLEAR_TIME)
+
 
     def draw_text(self, buffer):
         for row in range(len(buffer)):
@@ -50,17 +58,6 @@ class Display(object):
     def render(self):
         self.__device.set_image(self.__image)
         self.__device.show()
-
-        self.__clear()
-
-
-    # ----------------------------------------------------------------------------------------------------------------
-
-    def __clear(self):
-        self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
-        self.__drawing = ImageDraw.Draw(self.__image)
-
-        time.sleep(self.CLEAR_TIME)
 
 
     # ----------------------------------------------------------------------------------------------------------------
