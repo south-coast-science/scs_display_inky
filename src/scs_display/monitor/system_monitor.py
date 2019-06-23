@@ -4,7 +4,7 @@ Created on 21 Jun 2019
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
 """
 
-import sys
+# import sys
 
 from collections import OrderedDict
 from multiprocessing import Manager
@@ -54,8 +54,8 @@ class SystemMonitor(SynchronisedProcess):
     # SynchronisedProcess implementation...
 
     def stop(self):
-        print("SystemMonitor: stop", file=sys.stderr)
-        sys.stderr.flush()
+        # print("SystemMonitor: stop", file=sys.stderr)
+        # sys.stderr.flush()
 
         self.__display.status = self.__shutdown_message
         self.__display.clear()
@@ -64,8 +64,8 @@ class SystemMonitor(SynchronisedProcess):
 
 
     def run(self):
-        print("SystemMonitor: run", file=sys.stderr)
-        sys.stderr.flush()
+        # print("SystemMonitor: run", file=sys.stderr)
+        # sys.stderr.flush()
 
         try:
             timer = IntervalTimer(self.UPDATE_INTERVAL)
@@ -88,9 +88,12 @@ class SystemMonitor(SynchronisedProcess):
     # ----------------------------------------------------------------------------------------------------------------
     # setter for client process...
 
-    def set_status(self, status):
-        with self._lock:
-            status.as_list(self._value)
+    def set_message(self, message):
+        status = SystemStatus(message)
+
+        if status.is_valid():
+            with self._lock:
+                status.as_list(self._value)
 
 
     # ----------------------------------------------------------------------------------------------------------------
