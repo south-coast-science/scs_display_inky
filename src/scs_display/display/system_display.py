@@ -118,13 +118,7 @@ class SystemDisplay(object):
         self.__display.set_text(8, "")
         self.__display.set_text(9, self.__status, True)
 
-        update = self.__display.render()
-
-        if update:
-            print(self, file=sys.stderr)
-            sys.stderr.flush()
-
-        return update
+        return self.__display.render()
 
 
     # ----------------------------------------------------------------------------------------------------------------
