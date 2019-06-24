@@ -15,6 +15,7 @@ from scs_display.display.text_display import TextDisplay
 
 from scs_host.sys.host import Host
 from scs_host.sys.hostname import Hostname
+from scs_host.sys.nmcli import NMCLi
 
 
 # --------------------------------------------------------------------------------------------------------------------
@@ -50,7 +51,9 @@ class SystemDisplay(object):
 
         tag = cls.system_tag()
         host = cls.system_hostname()
-        homes = {}
+
+        nmcli = NMCLi.find()
+        homes = {} if nmcli is None else nmcli.connections
 
         return cls(device_name, datetime, tag, host, homes, status)
 
@@ -75,7 +78,11 @@ class SystemDisplay(object):
 
     def update(self):
         self.__datetime = LocalizedDatetime.now()
-        # TODO: network info here
+
+        nmcli = NMCLi.find()
+
+        if nmcli is not None:
+            self.__homes = nmcli.connections
 
         return self.render()
 
@@ -110,7 +117,13 @@ class SystemDisplay(object):
         self.__display.set_text(8, "")
         self.__display.set_text(9, self.__status, True)
 
-        return self.__display.render()
+        update = self.__display.render()
+
+        if update:
+            print(self, file=sys.stderr)
+            sys.stderr.flush()
+
+        return update
 
 
     # ----------------------------------------------------------------------------------------------------------------
