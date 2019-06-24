@@ -2,6 +2,8 @@
 Created on 20 Jun 2019
 
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
+
+https://learn.pimoroni.com/tutorial/sandyj/getting-started-with-inky-phat
 """
 
 import time

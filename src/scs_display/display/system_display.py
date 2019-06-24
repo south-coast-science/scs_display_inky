@@ -82,13 +82,14 @@ class SystemDisplay(object):
         nmcli = NMCLi.find()
 
         if nmcli is not None:
-            self.__homes = nmcli.connections
+            self.__homes = nmcli.connections.items()
 
         return self.render()
 
 
     def clear(self):
         self.__datetime = None
+
         self.__homes = {}
 
         return self.render()
