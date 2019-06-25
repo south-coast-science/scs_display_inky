@@ -82,7 +82,7 @@ class SystemDisplay(object):
         nmcli = NMCLi.find()
 
         if nmcli is not None:
-            self.__homes = nmcli.connections.items()
+            self.__homes = nmcli.connections
 
         return self.render()
 
@@ -108,7 +108,7 @@ class SystemDisplay(object):
 
         count = 0
 
-        for port, network in self.__homes:
+        for port, network in self.__homes.items():
             self.__display.set_text(6 + count, "%5s: %s" % (port, network))
 
             count += 1
