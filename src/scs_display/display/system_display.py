@@ -76,6 +76,10 @@ class SystemDisplay(object):
 
     # ----------------------------------------------------------------------------------------------------------------
 
+    def clean(self):
+        self.__display.clean()
+
+
     def update(self):
         self.__datetime = LocalizedDatetime.now()
 

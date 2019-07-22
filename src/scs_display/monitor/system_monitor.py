@@ -67,6 +67,8 @@ class SystemMonitor(SynchronisedProcess):
         # print("SystemMonitor: run", file=sys.stderr)
         # sys.stderr.flush()
 
+        self.__display.clean()
+
         try:
             timer = IntervalTimer(self.UPDATE_INTERVAL)
 
