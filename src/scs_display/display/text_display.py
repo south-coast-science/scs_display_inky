@@ -52,6 +52,10 @@ class TextDisplay(object):
 
     # ----------------------------------------------------------------------------------------------------------------
 
+    def clean(self):
+        self.__display.clean()
+
+
     def render(self):
         if self.__buffer == self.__screen:
             return False

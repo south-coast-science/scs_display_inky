@@ -20,8 +20,10 @@ class Display(object):
     classdocs
     """
 
-    COLOUR =            "black"
-    CLEAR_TIME =        1.0         # seconds
+    COLOUR =                    "black"
+    CLEAR_TIME =                1.0         # seconds
+
+    DEFAULT_CLEAN_CYCLES =      1
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -43,6 +45,12 @@ class Display(object):
 
 
     # ----------------------------------------------------------------------------------------------------------------
+
+    def clean(self, cycles=None):
+        for _ in range(self.DEFAULT_CLEAN_CYCLES if cycles is None else cycles):
+            self.clear()
+            self.render()
+
 
     def clear(self):
         self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
