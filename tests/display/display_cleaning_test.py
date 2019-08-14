@@ -4,8 +4,6 @@
 Created on 22 Jul 2019
 """
 
-import time
-
 from PIL import ImageFont
 
 from scs_display.display.display import Display
