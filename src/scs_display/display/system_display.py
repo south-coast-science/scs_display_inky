@@ -100,10 +100,14 @@ class SystemDisplay(object):
         if nmcli is not None:
             self.__homes = nmcli.connections
 
-        queue_report = QueueReport.load(self.__queue_report_filename)
-        client_status = self.__CLIENT_STATUS[queue_report.status()]
+        if self.__queue_report_filename:
+            queue_report = QueueReport.load(self.__queue_report_filename)
+            client_status = self.__CLIENT_STATUS[queue_report.status()]
 
-        self.__status = self.__system_status + ':' + client_status
+            self.__status = self.__system_status + ':' + client_status
+
+        else:
+            self.__status = self.__system_status
 
         return self.render()
 
