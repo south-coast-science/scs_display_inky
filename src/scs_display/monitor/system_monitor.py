@@ -4,7 +4,7 @@ Created on 21 Jun 2019
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
 """
 
-# import sys
+import time
 
 from collections import OrderedDict
 from multiprocessing import Manager
@@ -30,8 +30,8 @@ class SystemMonitor(SynchronisedProcess):
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def construct(cls, device_name, startup_message, shutdown_message):
-        display = SystemDisplay.construct(device_name, startup_message)
+    def construct(cls, device_name, startup_message, shutdown_message, queue_report_filename):
+        display = SystemDisplay.construct(device_name, startup_message, queue_report_filename)
 
         return cls(display, shutdown_message)
 
@@ -54,20 +54,16 @@ class SystemMonitor(SynchronisedProcess):
     # SynchronisedProcess implementation...
 
     def stop(self):
-        # print("SystemMonitor: stop", file=sys.stderr)
-        # sys.stderr.flush()
-
-        self.__display.status = self.__shutdown_message
+        self.__display.system_status = self.__shutdown_message
         self.__display.clear()
+
+        time.sleep(self.UPDATE_INTERVAL)
 
         super().stop()
 
 
     def run(self):
-        # print("SystemMonitor: run", file=sys.stderr)
-        # sys.stderr.flush()
-
-        self.__display.clean()
+        # self.__display.clean()
 
         try:
             timer = IntervalTimer(self.UPDATE_INTERVAL)
@@ -79,7 +75,7 @@ class SystemMonitor(SynchronisedProcess):
                 status = SystemStatus.construct_from_jdict(OrderedDict(value))
 
                 if status is not None:
-                    self.__display.status = status.message
+                    self.__display.system_status = status.message
 
                 self.__display.update()
 

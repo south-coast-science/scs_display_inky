@@ -11,10 +11,11 @@ from scs_display.display.system_display import SystemDisplay
 
 # --------------------------------------------------------------------------------------------------------------------
 
+report_filename = '/tmp/southcoastscience/mqtt_queue_report.json'
 model = "SCS Praxis/Handheld v1.0"
 status = "RUNNING"
 
-display = SystemDisplay.construct(model, status)
+display = SystemDisplay.construct(model, status, report_filename)
 print(display)
 print("-")
 
@@ -30,7 +31,7 @@ try:
 except KeyboardInterrupt:
     pass
 
-display.status = "STANDBY"
+display.system_status = "STANDBY"
 display.clear()
 display.print()
 print("-")
