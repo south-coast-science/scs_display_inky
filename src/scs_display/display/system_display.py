@@ -9,6 +9,8 @@ import sys
 from PIL import ImageFont
 
 from scs_core.data.localized_datetime import LocalizedDatetime, ISO8601
+from scs_core.data.queue_report import QueueReport
+
 from scs_core.sys.system_id import SystemID
 
 from scs_display.display.text_display import TextDisplay
@@ -22,8 +24,16 @@ from scs_host.sys.nmcli import NMCLi
 
 class SystemDisplay(object):
     """
-    classdocs
     """
+
+    __CLIENT_STATUS = {
+        QueueReport.STATUS_NONE:            "",
+        QueueReport.STATUS_INHIBITED:       "PUBLISHING INHIBITED",
+        QueueReport.STATUS_DISCONNECTED:    "CONNECTING",
+        QueueReport.STATUS_PUBLISHING:      "PUBLISHING DATA",
+        QueueReport.STATUS_QUEUING:         "QUEUING DATA",
+        QueueReport.STATUS_CLEARING:        "CLEARING DATA BACKLOG "
+    }
 
     __FONT = ImageFont.load_default()
 
@@ -46,31 +56,33 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def construct(cls, device_name, status):
+    def construct(cls, device_name, system_status, queue_report_filename):
         datetime = LocalizedDatetime.now()
 
         tag = cls.system_tag()
         host = cls.system_hostname()
 
-        nmcli = NMCLi.find()
-        homes = {} if nmcli is None else nmcli.connections
+        # nmcli = NMCLi.find()
+        homes = {}
 
-        return cls(device_name, datetime, tag, host, homes, status)
+        return cls(device_name, datetime, tag, host, homes, system_status, queue_report_filename)
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def __init__(self, device_name, datetime, tag, host, homes, status):
+    def __init__(self, device_name, datetime, tag, host, homes, system_status, queue_report_filename):
         """
         Constructor
         """
-        self.__device_name = device_name                # string
-        self.__datetime = datetime                      # string
-        self.__tag = tag                                # string
-        self.__host = host                              # string
-        self.__homes = homes                            # dict of port: network
-        self.__status = status                          # string
+        self.__device_name = device_name                            # string
+        self.__datetime = datetime                                  # string
+        self.__tag = tag                                            # string
+        self.__host = host                                          # string
+        self.__homes = homes                                        # dict of port: network
+        self.__system_status = system_status                        # string
+        self.__queue_report_filename = queue_report_filename        # string
 
+        self.__status = "                      "
         self.__display = TextDisplay(self.__FONT)
 
 
@@ -88,6 +100,11 @@ class SystemDisplay(object):
         if nmcli is not None:
             self.__homes = nmcli.connections
 
+        queue_report = QueueReport.load(self.__queue_report_filename)
+        client_status = self.__CLIENT_STATUS[queue_report.status()]
+
+        self.__status = self.__system_status + ':' + client_status
+
         return self.render()
 
 
@@ -95,6 +112,7 @@ class SystemDisplay(object):
         self.__datetime = None
 
         self.__homes = {}
+        self.__status = self.__system_status
 
         return self.render()
 
@@ -128,13 +146,13 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     @property
-    def status(self):
-        return self.__status
+    def system_status(self):
+        return self.__system_status
 
 
-    @status.setter
-    def status(self, status):
-        self.__status = status
+    @system_status.setter
+    def system_status(self, system_status):
+        self.__system_status = system_status
 
 
     # ----------------------------------------------------------------------------------------------------------------
@@ -156,7 +174,7 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def __str__(self, *args, **kwargs):
-        return "SystemDisplay:{device_name:%s, datetime:%s, tag:%s, host:%s, homes:%s, status:%s, " \
-               "display:%s}" % \
-               (self.__device_name, self.__datetime, self.__tag, self.__host, self.__homes, self.__status,
-                self.__display)
+        return "SystemDisplay:{device_name:%s, datetime:%s, tag:%s, host:%s, homes:%s, system_status:%s, " \
+               "queue_report_filename:%s display:%s}" % \
+               (self.__device_name, self.__datetime, self.__tag, self.__host, self.__homes, self.__system_status,
+                self.__queue_report_filename, self.__display)
