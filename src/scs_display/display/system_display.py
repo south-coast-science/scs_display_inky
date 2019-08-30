@@ -9,7 +9,7 @@ import sys
 from PIL import ImageFont
 
 from scs_core.data.localized_datetime import LocalizedDatetime, ISO8601
-from scs_core.data.queue_report import QueueReport
+from scs_core.data.queue_report import QueueReport, QueueStatus
 
 from scs_core.sys.system_id import SystemID
 
@@ -27,12 +27,12 @@ class SystemDisplay(object):
     """
 
     __CLIENT_STATUS = {
-        QueueReport.STATUS_NONE:            "",
-        QueueReport.STATUS_INHIBITED:       "PUBLISHING INHIBITED",
-        QueueReport.STATUS_DISCONNECTED:    "CONNECTING",
-        QueueReport.STATUS_PUBLISHING:      "PUBLISHING DATA",
-        QueueReport.STATUS_QUEUING:         "QUEUING DATA",
-        QueueReport.STATUS_CLEARING:        "CLEARING DATA BACKLOG "
+        QueueStatus.NONE:               "FAULT",
+        QueueStatus.INHIBITED:          "PUBLISHING INHIBITED",
+        QueueStatus.DISCONNECTED:       "CONNECTING",
+        QueueStatus.PUBLISHING:         "PUBLISHING DATA",
+        QueueStatus.QUEUING:            "QUEUING DATA",
+        QueueStatus.CLEARING:           "CLEARING DATA BACKLOG "
     }
 
     __FONT = ImageFont.load_default()
