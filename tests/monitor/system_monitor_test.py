@@ -16,12 +16,13 @@ from scs_display.monitor.system_monitor import SystemMonitor, SystemStatus
 # --------------------------------------------------------------------------------------------------------------------
 
 queue_report_filename = '/tmp/southcoastscience/mqtt_queue_report.json'
+gps_report_filename = '/tmp/southcoastscience/gps_report.json'
 
 model = "SCS Praxis/Handheld v1.0"
 startup_message = "STARTING"
 shutdown_message = "STANDBY"
 
-monitor = SystemMonitor.construct(model, startup_message, shutdown_message, queue_report_filename)
+monitor = SystemMonitor.construct(model, startup_message, shutdown_message, queue_report_filename, gps_report_filename)
 print(monitor)
 print("-")
 

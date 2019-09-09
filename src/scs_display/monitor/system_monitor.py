@@ -30,8 +30,8 @@ class SystemMonitor(SynchronisedProcess):
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def construct(cls, device_name, startup_message, shutdown_message, queue_report_filename):
-        display = SystemDisplay.construct(device_name, startup_message, queue_report_filename)
+    def construct(cls, device_name, startup_message, shutdown_message, queue_report_filename, gps_report_filename):
+        display = SystemDisplay.construct(device_name, startup_message, queue_report_filename, gps_report_filename)
 
         return cls(display, shutdown_message)
 
