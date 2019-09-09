@@ -83,6 +83,7 @@ class SystemDisplay(object):
         self.__host = host                                          # string
         self.__homes = homes                                        # dict of port: network
         self.__system_status = system_status                        # string
+
         self.__queue_report_filename = queue_report_filename        # string
         self.__gps_report_filename = gps_report_filename            # string
 
@@ -106,22 +107,21 @@ class SystemDisplay(object):
         if nmcli is not None:
             self.__homes = nmcli.connections
 
+        self.__status = self.__system_status
+
         # MQTT queue...
         if self.__queue_report_filename:
             queue_report = QueueReport.load(self.__queue_report_filename)
             client_status = self.__CLIENT_STATUS[queue_report.status()]
 
-            self.__status = self.__system_status + ':' + client_status
-
-        else:
-            self.__status = self.__system_status
+            self.__status += ':' + client_status
 
         # GPS quality...
         if self.__gps_report_filename:
             gps_report = GPSDatum.load(self.__gps_report_filename)
             gps_quality = gps_report.quality
 
-            self.__status = self.__status + '  GPS:' + str(gps_quality)
+            self.__status += '  GPS:' + str(gps_quality)
 
         return self.render()
 
