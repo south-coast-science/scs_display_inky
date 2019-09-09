@@ -11,11 +11,13 @@ from scs_display.display.system_display import SystemDisplay
 
 # --------------------------------------------------------------------------------------------------------------------
 
-report_filename = '/tmp/southcoastscience/mqtt_queue_report.json'
+queue_report_filename = '/tmp/southcoastscience/mqtt_queue_report.json'
+gps_report_filename = '/tmp/southcoastscience/gps_report.json'
+
 model = "SCS Praxis/Handheld v1.0"
 status = "RUNNING"
 
-display = SystemDisplay.construct(model, status, report_filename)
+display = SystemDisplay.construct(model, status, queue_report_filename, gps_report_filename)
 print(display)
 print("-")
 

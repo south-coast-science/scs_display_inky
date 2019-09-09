@@ -11,6 +11,8 @@ from PIL import ImageFont
 from scs_core.data.localized_datetime import LocalizedDatetime, ISO8601
 from scs_core.data.queue_report import QueueReport, QueueStatus
 
+from scs_core.position.gps_datum import GPSDatum
+
 from scs_core.sys.system_id import SystemID
 
 from scs_display.display.text_display import TextDisplay
@@ -56,7 +58,7 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def construct(cls, device_name, system_status, queue_report_filename):
+    def construct(cls, device_name, system_status, queue_report_filename, gps_report_filename):
         datetime = LocalizedDatetime.now()
 
         tag = cls.system_tag()
@@ -65,12 +67,13 @@ class SystemDisplay(object):
         # nmcli = NMCLi.find()
         homes = {}
 
-        return cls(device_name, datetime, tag, host, homes, system_status, queue_report_filename)
+        return cls(device_name, datetime, tag, host, homes, system_status, queue_report_filename, gps_report_filename)
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def __init__(self, device_name, datetime, tag, host, homes, system_status, queue_report_filename):
+    def __init__(self, device_name, datetime, tag, host, homes, system_status,
+                 queue_report_filename, gps_report_filename):
         """
         Constructor
         """
@@ -81,6 +84,7 @@ class SystemDisplay(object):
         self.__homes = homes                                        # dict of port: network
         self.__system_status = system_status                        # string
         self.__queue_report_filename = queue_report_filename        # string
+        self.__gps_report_filename = gps_report_filename            # string
 
         self.__status = "                      "
         self.__display = TextDisplay(self.__FONT)
@@ -93,13 +97,16 @@ class SystemDisplay(object):
 
 
     def update(self):
+        # time...
         self.__datetime = LocalizedDatetime.now()
 
+        # network...
         nmcli = NMCLi.find()
 
         if nmcli is not None:
             self.__homes = nmcli.connections
 
+        # MQTT queue...
         if self.__queue_report_filename:
             queue_report = QueueReport.load(self.__queue_report_filename)
             client_status = self.__CLIENT_STATUS[queue_report.status()]
@@ -108,6 +115,13 @@ class SystemDisplay(object):
 
         else:
             self.__status = self.__system_status
+
+        # GPS quality...
+        if self.__gps_report_filename:
+            gps_report = GPSDatum.load(self.__gps_report_filename)
+            gps_quality = gps_report.quality
+
+            self.__status = self.__status + '  GPS:' + str(gps_quality)
 
         return self.render()
 
@@ -179,6 +193,6 @@ class SystemDisplay(object):
 
     def __str__(self, *args, **kwargs):
         return "SystemDisplay:{device_name:%s, datetime:%s, tag:%s, host:%s, homes:%s, system_status:%s, " \
-               "queue_report_filename:%s display:%s}" % \
+               "queue_report_filename:%s, gps_report_filename:%s, display:%s}" % \
                (self.__device_name, self.__datetime, self.__tag, self.__host, self.__homes, self.__system_status,
-                self.__queue_report_filename, self.__display)
+                self.__queue_report_filename, self.__gps_report_filename, self.__display)
