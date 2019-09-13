@@ -4,6 +4,7 @@ Created on 21 Jun 2019
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
 """
 
+import sys
 import time
 
 from collections import OrderedDict
@@ -65,6 +66,9 @@ class SystemMonitor(SynchronisedProcess):
     def run(self):
         # self.__display.clean()
 
+        print("SystemMonitor: *** run starting", file=sys.stderr)
+        sys.stderr.flush()
+
         try:
             timer = IntervalTimer(self.UPDATE_INTERVAL)
 
@@ -81,6 +85,10 @@ class SystemMonitor(SynchronisedProcess):
 
         except KeyboardInterrupt:
             pass
+
+        finally:
+            print("SystemMonitor: *** run ending", file=sys.stderr)
+            sys.stderr.flush()
 
 
     # ----------------------------------------------------------------------------------------------------------------
