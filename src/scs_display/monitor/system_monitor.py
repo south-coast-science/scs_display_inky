@@ -66,7 +66,7 @@ class SystemMonitor(SynchronisedProcess):
     def run(self):
         # self.__display.clean()
 
-        print("SystemMonitor: *** starting", file=sys.stderr)
+        print("SystemMonitor: *** run starting", file=sys.stderr)
         sys.stderr.flush()
 
         try:
@@ -87,7 +87,7 @@ class SystemMonitor(SynchronisedProcess):
             pass
 
         finally:
-            print("SystemMonitor: *** ending", file=sys.stderr)
+            print("SystemMonitor: *** run ending", file=sys.stderr)
             sys.stderr.flush()
 
 
