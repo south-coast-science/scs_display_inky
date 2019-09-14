@@ -12,6 +12,8 @@ from PIL import Image, ImageDraw
 
 from inky import InkyPHAT
 
+from scs_host.lock.lock import Lock
+
 
 # --------------------------------------------------------------------------------------------------------------------
 
@@ -21,9 +23,11 @@ class Display(object):
     """
 
     COLOUR =                    "black"
-    CLEAR_TIME =                1.0         # seconds
+    CLEAR_TIME =                1.0             # seconds
 
     DEFAULT_CLEAN_CYCLES =      1
+
+    __LOCK_TIMEOUT =            10.0            # seconds
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -47,27 +51,73 @@ class Display(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def clean(self, cycles=None):
-        for _ in range(self.DEFAULT_CLEAN_CYCLES if cycles is None else cycles):
-            self.clear()
-            self.render()
+        try:
+            self.obtain_lock()
+
+            for _ in range(self.DEFAULT_CLEAN_CYCLES if cycles is None else cycles):
+                # clear...
+                self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
+                self.__drawing = ImageDraw.Draw(self.__image)
+
+                time.sleep(self.CLEAR_TIME)
+
+                # render...
+                self.__device.set_image(self.__image)
+                self.__device.show()
+
+        finally:
+            self.release_lock()
 
 
     def clear(self):
-        self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
-        self.__drawing = ImageDraw.Draw(self.__image)
+        try:
+            self.obtain_lock()
 
-        time.sleep(self.CLEAR_TIME)
+            self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
+            self.__drawing = ImageDraw.Draw(self.__image)
+
+            time.sleep(self.CLEAR_TIME)
+
+        finally:
+            self.release_lock()
 
 
     def draw_text(self, buffer):
-        for row in range(len(buffer)):
-            y_offset = row * self.__text_height
-            self.__drawing.text((0, y_offset), buffer[row], self.__device.BLACK, self.__font)
+        try:
+            self.obtain_lock()
+
+            for row in range(len(buffer)):
+                y_offset = row * self.__text_height
+                self.__drawing.text((0, y_offset), buffer[row], self.__device.BLACK, self.__font)
+
+        finally:
+            self.release_lock()
 
 
     def render(self):
-        self.__device.set_image(self.__image)
-        self.__device.show()
+        try:
+            self.obtain_lock()
+
+            self.__device.set_image(self.__image)
+            self.__device.show()
+
+        finally:
+            self.release_lock()
+
+
+    # ----------------------------------------------------------------------------------------------------------------
+
+    def obtain_lock(self):
+        Lock.acquire(self.__lock_name, self.__LOCK_TIMEOUT)
+
+
+    def release_lock(self):
+        Lock.release(self.__lock_name)
+
+
+    @property
+    def __lock_name(self):
+        return self.__class__.__name__
 
 
     # ----------------------------------------------------------------------------------------------------------------
