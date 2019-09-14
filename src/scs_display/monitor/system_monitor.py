@@ -64,8 +64,6 @@ class SystemMonitor(SynchronisedProcess):
 
 
     def run(self):
-        # self.__display.clean()
-
         print("SystemMonitor: *** run starting", file=sys.stderr)
         sys.stderr.flush()
 

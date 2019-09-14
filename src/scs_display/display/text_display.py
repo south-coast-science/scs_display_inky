@@ -86,10 +86,12 @@ class TextDisplay(object):
 
     def print_buffer(self, file=sys.stdout):
         self.__print(self.__buffer, file)
+        file.flush()
 
 
     def print_screen(self, file=sys.stdout):
         self.__print(self.__screen, file)
+        file.flush()
 
 
     # ----------------------------------------------------------------------------------------------------------------
