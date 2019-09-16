@@ -13,6 +13,8 @@ from PIL import Image, ImageDraw
 
 from inky import InkyPHAT
 
+from scs_core.sys.timeout import Timeout
+
 from scs_host.lock.lock import Lock
 
 
@@ -25,10 +27,11 @@ class Display(object):
 
     COLOUR =                    "black"
     CLEAR_TIME =                1.0             # seconds
-    DRAW_TIME =                 6.0             # seconds
+    DRAW_TIME =                 7.0             # seconds
     DEFAULT_CLEAN_CYCLES =      1
 
     __LOCK_TIMEOUT =            15.0            # seconds
+
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -48,15 +51,15 @@ class Display(object):
         self.__text_width = self.__device.WIDTH // m_width
         self.__text_height = self.__device.HEIGHT // m_height + 1
 
+        self.__stop = None
+        self.__render_timeout = Timeout(self.DRAW_TIME)
+
 
     # ----------------------------------------------------------------------------------------------------------------
 
     def clean(self, cycles=None):
         try:
             self.obtain_lock()
-
-            print("Display: starting clean", file=sys.stderr)
-            sys.stderr.flush()
 
             for _ in range(self.DEFAULT_CLEAN_CYCLES if cycles is None else cycles):
                 # clear...
@@ -72,17 +75,10 @@ class Display(object):
         finally:
             self.release_lock()
 
-            print("Display: ending clean", file=sys.stderr)
-            sys.stderr.flush()
-
-
 
     def clear(self):
         try:
             self.obtain_lock()
-
-            print("Display: starting clear", file=sys.stderr)
-            sys.stderr.flush()
 
             self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
             self.__drawing = ImageDraw.Draw(self.__image)
@@ -92,28 +88,17 @@ class Display(object):
         finally:
             self.release_lock()
 
-            print("Display: ending clear", file=sys.stderr)
-            sys.stderr.flush()
-
 
     def draw_text(self, buffer):
         try:
             self.obtain_lock()
 
-            print("Display: starting draw_text", file=sys.stderr)
-            sys.stderr.flush()
-
             for row in range(len(buffer)):
                 y_offset = row * self.__text_height
                 self.__drawing.text((0, y_offset), buffer[row], self.__device.BLACK, self.__font)
 
-            # time.sleep(self.CLEAR_TIME)
-
         finally:
             self.release_lock()
-
-            print("Display: ending draw_text", file=sys.stderr)
-            sys.stderr.flush()
 
 
     def render(self):
@@ -123,16 +108,20 @@ class Display(object):
             print("Display: starting render", file=sys.stderr)
             sys.stderr.flush()
 
-            self.__device.set_image(self.__image)
-            self.__device.show(False)
+            with self.__render_timeout:
+                self.__device.set_image(self.__image)
+                self.__device.show(True)
 
-            time.sleep(self.DRAW_TIME)
+        except TimeoutError:
+            print("Display: *** render timeout", file=sys.stderr)
+            sys.stderr.flush()
 
         finally:
             self.release_lock()
 
             print("Display: ending render", file=sys.stderr)
             sys.stderr.flush()
+
 
 
     # ----------------------------------------------------------------------------------------------------------------
@@ -165,5 +154,5 @@ class Display(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def __str__(self, *args, **kwargs):
-        return "Display:{text_width:%s, text_height:%s colour:%s}" % \
-               (self.text_width, self.text_height, self.COLOUR)
+        return "Display:{text_width:%s, text_height:%s, colour:%s, render_timeout:%s}" % \
+               (self.text_width, self.text_height, self.COLOUR, self.__render_timeout)

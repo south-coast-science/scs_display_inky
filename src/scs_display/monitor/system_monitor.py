@@ -81,7 +81,7 @@ class SystemMonitor(SynchronisedProcess):
 
                 self.__display.update()
 
-        except KeyboardInterrupt:
+        except (BrokenPipeError, KeyboardInterrupt, TypeError):
             pass
 
         finally:
