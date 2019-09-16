@@ -25,7 +25,7 @@ class Display(object):
 
     COLOUR =                    "black"
     CLEAR_TIME =                1.0             # seconds
-
+    DRAW_TIME =                 6.0             # seconds
     DEFAULT_CLEAN_CYCLES =      1
 
     __LOCK_TIMEOUT =            15.0            # seconds
@@ -124,9 +124,9 @@ class Display(object):
             sys.stderr.flush()
 
             self.__device.set_image(self.__image)
-            self.__device.show()
+            self.__device.show(False)
 
-            # time.sleep(self.CLEAR_TIME)
+            time.sleep(self.DRAW_TIME)
 
         finally:
             self.release_lock()
