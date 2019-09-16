@@ -28,7 +28,7 @@ class Display(object):
 
     DEFAULT_CLEAN_CYCLES =      1
 
-    __LOCK_TIMEOUT =            10.0            # seconds
+    __LOCK_TIMEOUT =            15.0            # seconds
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -107,6 +107,8 @@ class Display(object):
                 y_offset = row * self.__text_height
                 self.__drawing.text((0, y_offset), buffer[row], self.__device.BLACK, self.__font)
 
+            # time.sleep(self.CLEAR_TIME)
+
         finally:
             self.release_lock()
 
@@ -123,6 +125,8 @@ class Display(object):
 
             self.__device.set_image(self.__image)
             self.__device.show()
+
+            # time.sleep(self.CLEAR_TIME)
 
         finally:
             self.release_lock()
