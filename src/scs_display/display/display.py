@@ -61,9 +61,6 @@ class Display(object):
         try:
             self.obtain_lock()
 
-            print("Display: starting clean", file=sys.stderr)
-            sys.stderr.flush()
-
             for _ in range(self.DEFAULT_CLEAN_CYCLES if cycles is None else cycles):
                 # clear...
                 self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
@@ -78,17 +75,10 @@ class Display(object):
         finally:
             self.release_lock()
 
-            print("Display: ending clean", file=sys.stderr)
-            sys.stderr.flush()
-
-
 
     def clear(self):
         try:
             self.obtain_lock()
-
-            print("Display: starting clear", file=sys.stderr)
-            sys.stderr.flush()
 
             self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
             self.__drawing = ImageDraw.Draw(self.__image)
@@ -98,28 +88,17 @@ class Display(object):
         finally:
             self.release_lock()
 
-            print("Display: ending clear", file=sys.stderr)
-            sys.stderr.flush()
-
 
     def draw_text(self, buffer):
         try:
             self.obtain_lock()
 
-            print("Display: starting draw_text", file=sys.stderr)
-            sys.stderr.flush()
-
             for row in range(len(buffer)):
                 y_offset = row * self.__text_height
                 self.__drawing.text((0, y_offset), buffer[row], self.__device.BLACK, self.__font)
 
-            # time.sleep(self.CLEAR_TIME)
-
         finally:
             self.release_lock()
-
-            print("Display: ending draw_text", file=sys.stderr)
-            sys.stderr.flush()
 
 
     def render(self):
