@@ -4,6 +4,7 @@ Created on 21 Jun 2019
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
 """
 
+import copy
 import time
 
 from collections import OrderedDict
@@ -68,7 +69,7 @@ class SystemMonitor(SynchronisedProcess):
 
             while timer.true():
                 with self._lock:
-                    value = self._value
+                    value = copy.deepcopy(self._value)
 
                 status = SystemStatus.construct_from_jdict(OrderedDict(value))
 
