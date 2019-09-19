@@ -69,9 +69,7 @@ class SystemMonitor(SynchronisedProcess):
 
             while timer.true():
                 with self._lock:
-                    value = copy.deepcopy(self._value)
-
-                status = SystemStatus.construct_from_jdict(OrderedDict(value))
+                    status = SystemStatus.construct_from_jdict(OrderedDict(self._value))
 
                 if status is not None:
                     self.__display.system_status = status.message
