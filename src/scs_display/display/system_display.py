@@ -181,8 +181,8 @@ class SystemDisplay(object):
 
         iso = ISO8601.construct(self.__datetime)
 
-        return "%s %s %s" % (iso.date, iso.time, iso.timezone)
-        # return "%s" % iso.date
+        # return "%s %s %s" % (iso.date, iso.time, iso.timezone)
+        return "%s" % iso.date
 
 
     def print(self, file=sys.stdout):
