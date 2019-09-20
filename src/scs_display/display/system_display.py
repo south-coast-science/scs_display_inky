@@ -137,7 +137,7 @@ class SystemDisplay(object):
 
     def render(self):
         self.__display.set_text(0, self.__device_name, True)
-        self.__display.set_text(1, self.formatted_datetime, True)
+        self.__display.set_text(1, self.formatted_datetime(), True)
         self.__display.set_text(2, "")
         self.__display.set_text(3, "  tag: %s" % self.__tag)
         self.__display.set_text(4, " host: %s" % self.__host)
@@ -175,7 +175,6 @@ class SystemDisplay(object):
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    @property
     def formatted_datetime(self):
         if self.__datetime is None:
             return ""
@@ -183,6 +182,7 @@ class SystemDisplay(object):
         iso = ISO8601.construct(self.__datetime)
 
         return "%s %s %s" % (iso.date, iso.time, iso.timezone)
+        # return "%s" % iso.date
 
 
     def print(self, file=sys.stdout):
