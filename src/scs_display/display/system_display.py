@@ -34,7 +34,7 @@ class SystemDisplay(object):
         QueueStatus.DISCONNECTED:       "CONNECTING",
         QueueStatus.PUBLISHING:         "PUBLISHING DATA",
         QueueStatus.QUEUING:            "QUEUING DATA",
-        QueueStatus.CLEARING:           "CLEARING DATA BACKLOG "
+        QueueStatus.CLEARING: "CLEARING DATA BACKLOG"
     }
 
     __FONT = ImageFont.load_default()
@@ -64,7 +64,6 @@ class SystemDisplay(object):
         tag = cls.system_tag()
         host = cls.system_hostname()
 
-        # nmcli = NMCLi.find()
         homes = {}
 
         return cls(device_name, datetime, tag, host, homes, system_status, queue_report_filename, gps_report_filename)
@@ -181,8 +180,8 @@ class SystemDisplay(object):
 
         iso = ISO8601.construct(self.__datetime)
 
-        # return "%s %s %s" % (iso.date, iso.time, iso.timezone)
-        return "%s" % iso.date
+        return "%s %s %s" % (iso.date, iso.time, iso.timezone)
+        # return "%s" % iso.date
 
 
     def print(self, file=sys.stdout):
