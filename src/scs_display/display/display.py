@@ -27,6 +27,7 @@ class Display(object):
     """
 
     COLOUR =                    "black"
+
     CLEAR_TIME =                1.0             # seconds
     DRAW_TIME =                 7.0             # seconds
     DEFAULT_CLEAN_CYCLES =      1
