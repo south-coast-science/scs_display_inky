@@ -15,6 +15,7 @@ from inky import InkyPHAT
 
 from scs_core.sys.timeout import Timeout
 
+from scs_host.bus.spi import SPI
 from scs_host.lock.lock import Lock
 
 
@@ -26,11 +27,15 @@ class Display(object):
     """
 
     COLOUR =                    "black"
+
     CLEAR_TIME =                1.0             # seconds
     DRAW_TIME =                 7.0             # seconds
     DEFAULT_CLEAN_CYCLES =      1
 
     __LOCK_TIMEOUT =            15.0            # seconds
+
+    __SPI_BUS = 0
+    __SPI_DEVICE = 0
 
 
     # ----------------------------------------------------------------------------------------------------------------
@@ -54,6 +59,8 @@ class Display(object):
         self.__stop = None
         self.__render_timeout = Timeout(self.DRAW_TIME)
 
+        self.__spi = SPI(self.__SPI_BUS, self.__SPI_DEVICE, None, None)
+
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -66,11 +73,7 @@ class Display(object):
                 self.__image = Image.new("P", (self.__device.WIDTH, self.__device.HEIGHT))
                 self.__drawing = ImageDraw.Draw(self.__image)
 
-                time.sleep(self.CLEAR_TIME)
-
-                # render...
-                self.__device.set_image(self.__image)
-                self.__device.show()
+                self.__show()
 
         finally:
             self.release_lock()
@@ -108,9 +111,7 @@ class Display(object):
             print("Display: starting render", file=sys.stderr)
             sys.stderr.flush()
 
-            with self.__render_timeout:
-                self.__device.set_image(self.__image)
-                self.__device.show(True)
+            self.__show()
 
         except TimeoutError:
             print("Display: *** render timeout", file=sys.stderr)
@@ -121,6 +122,20 @@ class Display(object):
 
             print("Display: ending render", file=sys.stderr)
             sys.stderr.flush()
+
+
+    # ----------------------------------------------------------------------------------------------------------------
+
+    def __show(self):
+        with self.__render_timeout:
+            try:
+                self.__spi.acquire_lock()
+
+                self.__device.set_image(self.__image)
+                self.__device.show(True)
+
+            finally:
+                self.__spi.release_lock()
 
 
     # ----------------------------------------------------------------------------------------------------------------
@@ -153,5 +168,5 @@ class Display(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def __str__(self, *args, **kwargs):
-        return "Display:{text_width:%s, text_height:%s, colour:%s, render_timeout:%s}" % \
-               (self.text_width, self.text_height, self.COLOUR, self.__render_timeout)
+        return "Display:{text_width:%s, text_height:%s, colour:%s, render_timeout:%s, spi:%s}" % \
+               (self.text_width, self.text_height, self.COLOUR, self.__render_timeout, self.__spi)
