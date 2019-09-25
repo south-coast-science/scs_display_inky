@@ -133,7 +133,7 @@ class Display(object):
                 self.__spi.acquire_lock()
 
                 self.__device.set_image(self.__image)
-                self.__device.show(False)  # Do not let the display enter deep sleep - OPC affected!
+                self.__device.show(False)               # Do not let the display enter deep sleep - OPC affected!
 
             finally:
                 self.__spi.release_lock()
