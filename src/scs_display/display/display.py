@@ -29,7 +29,7 @@ class Display(object):
     COLOUR =                    "black"
 
     CLEAR_TIME =                1.0             # seconds
-    DRAW_TIME =                 7.0             # seconds
+    DRAW_TIME = 6.0  # seconds
     DEFAULT_CLEAN_CYCLES =      1
 
     __LOCK_TIMEOUT =            15.0            # seconds
@@ -127,15 +127,19 @@ class Display(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def __show(self):
+        # show...
         with self.__render_timeout:
             try:
                 self.__spi.acquire_lock()
 
                 self.__device.set_image(self.__image)
-                self.__device.show(True)
+                self.__device.show(False)  # Do not let the display enter deep sleep - OPC affected!
 
             finally:
                 self.__spi.release_lock()
+
+        # wait...
+        time.sleep(self.DRAW_TIME)
 
 
     # ----------------------------------------------------------------------------------------------------------------
