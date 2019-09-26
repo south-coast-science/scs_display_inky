@@ -34,7 +34,7 @@ class SystemDisplay(object):
         QueueStatus.DISCONNECTED:       "CONNECTING",
         QueueStatus.PUBLISHING:         "PUBLISHING DATA",
         QueueStatus.QUEUING:            "QUEUING DATA",
-        QueueStatus.CLEARING: "CLEARING DATA BACKLOG"
+        QueueStatus.CLEARING:           "CLEARING DATA BACKLOG"
     }
 
     __FONT = ImageFont.load_default()
