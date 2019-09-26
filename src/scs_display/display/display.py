@@ -29,10 +29,10 @@ class Display(object):
     COLOUR =                    "black"
 
     CLEAR_TIME =                1.0             # seconds
-    DRAW_TIME = 6.0  # seconds
+    DRAW_TIME =                 6.0             # seconds
     DEFAULT_CLEAN_CYCLES =      1
 
-    __LOCK_TIMEOUT =            15.0            # seconds
+    __LOCK_TIMEOUT =            20.0            # seconds
 
     __SPI_BUS = 0
     __SPI_DEVICE = 0
