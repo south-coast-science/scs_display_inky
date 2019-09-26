@@ -29,13 +29,13 @@ class Display(object):
     COLOUR =                    "black"
 
     CLEAR_TIME =                1.0             # seconds
-    DRAW_TIME = 6.0  # seconds
+    DRAW_TIME =                 6.0             # seconds
     DEFAULT_CLEAN_CYCLES =      1
 
-    __LOCK_TIMEOUT =            15.0            # seconds
+    __LOCK_TIMEOUT =            20.0            # seconds
 
-    __SPI_BUS = 0
-    __SPI_DEVICE = 0
+    __SPI_BUS =                 0
+    __SPI_DEVICE =              0
 
 
     # ----------------------------------------------------------------------------------------------------------------
@@ -133,7 +133,7 @@ class Display(object):
                 self.__spi.acquire_lock()
 
                 self.__device.set_image(self.__image)
-                self.__device.show(False)               # Do not let the display enter deep sleep - OPC affected!
+                self.__device.show(False)                   # Do not let the display enter deep sleep - OPC affected!?
 
             finally:
                 self.__spi.release_lock()
