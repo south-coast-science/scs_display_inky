@@ -37,6 +37,8 @@ class Display(object):
     __SPI_BUS =                 0
     __SPI_DEVICE =              0
 
+    __SPI_CLOCK =               300000      # Hz    was 488000
+    __SPI_MODE =                1
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -59,7 +61,8 @@ class Display(object):
         self.__stop = None
         self.__render_timeout = Timeout(self.DRAW_TIME)
 
-        self.__spi = SPI(self.__SPI_BUS, self.__SPI_DEVICE, None, None)
+        # self.__spi = SPI(self.__SPI_BUS, self.__SPI_DEVICE, None, None)
+        self.__spi = SPI(self.__SPI_BUS, self.__SPI_DEVICE, self.__SPI_MODE, self.__SPI_CLOCK)
 
 
     # ----------------------------------------------------------------------------------------------------------------
@@ -127,12 +130,14 @@ class Display(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def __show(self):
+        # update...
+        self.__device.set_image(self.__image)
+
         # show...
         with self.__render_timeout:
             try:
                 self.__spi.acquire_lock()
 
-                self.__device.set_image(self.__image)
                 self.__device.show(False)                   # Do not let the display enter deep sleep - OPC affected!?
 
             finally:

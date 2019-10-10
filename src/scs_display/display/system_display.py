@@ -31,7 +31,8 @@ class SystemDisplay(object):
     __CLIENT_STATUS = {
         QueueStatus.NONE:               "FAULT",
         QueueStatus.INHIBITED:          "PUBLISHING INHIBITED",
-        QueueStatus.DISCONNECTED:       "CONNECTING",
+        QueueStatus.WAITING:            "WAITING",
+        QueueStatus.CONNECTING:         "CONNECTING",
         QueueStatus.PUBLISHING:         "PUBLISHING DATA",
         QueueStatus.QUEUING:            "QUEUING DATA",
         QueueStatus.CLEARING:           "CLEARING DATA BACKLOG"
@@ -99,6 +100,9 @@ class SystemDisplay(object):
     def update(self):
         # time...
         self.__datetime = LocalizedDatetime.now()
+
+        print("SystemDisplay.update: %s" % self.__datetime, file=sys.stderr)
+        sys.stderr.flush()
 
         # network...
         nmcli = NMCLi.find()
