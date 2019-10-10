@@ -57,8 +57,14 @@ class TextDisplay(object):
 
 
     def render(self):
+        print("TextDisplay.render 1", file=sys.stderr)
+        sys.stderr.flush()
+
         if self.__buffer == self.__screen:
             return False
+
+        print("TextDisplay.render 2", file=sys.stderr)
+        sys.stderr.flush()
 
         for row in range(self.text_height):
             self.__screen[row] = self.__buffer[row]
