@@ -24,7 +24,7 @@ class SystemMonitor(SynchronisedProcess):
     classdocs
     """
 
-    UPDATE_INTERVAL =       1.0       # seconds
+    UPDATE_INTERVAL =       4.0       # seconds
 
 
     # ----------------------------------------------------------------------------------------------------------------
@@ -54,12 +54,16 @@ class SystemMonitor(SynchronisedProcess):
     # SynchronisedProcess implementation...
 
     def stop(self):
-        self.__display.system_status = self.__shutdown_message
-        self.__display.clear()
+        try:
+            self.__display.system_status = self.__shutdown_message
+            self.__display.clear()
 
-        time.sleep(self.UPDATE_INTERVAL)
+            time.sleep(self.UPDATE_INTERVAL)
 
-        super().stop()
+            super().stop()
+
+        except (BrokenPipeError, KeyboardInterrupt, SystemExit):
+            pass
 
 
     def run(self):
@@ -75,7 +79,7 @@ class SystemMonitor(SynchronisedProcess):
 
                 self.__display.update()
 
-        except (BrokenPipeError, KeyboardInterrupt, TypeError):
+        except (BrokenPipeError, KeyboardInterrupt, SystemExit):
             pass
 
 
