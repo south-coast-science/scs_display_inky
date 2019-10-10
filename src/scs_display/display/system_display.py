@@ -101,9 +101,6 @@ class SystemDisplay(object):
         # time...
         self.__datetime = LocalizedDatetime.now()
 
-        print("SystemDisplay.update: %s" % self.__datetime, file=sys.stderr)
-        sys.stderr.flush()
-
         # network...
         nmcli = NMCLi.find()
 
