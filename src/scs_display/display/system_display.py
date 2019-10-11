@@ -31,7 +31,7 @@ class SystemDisplay(object):
     __CLIENT_STATUS = {
         QueueStatus.NONE:               "FAULT",
         QueueStatus.INHIBITED:          "PUBLISHING INHIBITED",
-        QueueStatus.WAITING:            "WAITING",
+        QueueStatus.WAITING:            "WAITING FOR DATA",
         QueueStatus.CONNECTING:         "CONNECTING",
         QueueStatus.PUBLISHING:         "PUBLISHING DATA",
         QueueStatus.QUEUING:            "QUEUING DATA",
