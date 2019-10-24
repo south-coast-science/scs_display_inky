@@ -5,7 +5,7 @@ _Contains library classes only._
 
 **Required libraries:** 
 
-* Third party: einky, numpy
+* Third party: inky, numpy
 
 
 **Branches:**
