@@ -15,9 +15,9 @@ queue_report_filename = '/tmp/southcoastscience/mqtt_queue_report.json'
 gps_report_filename = '/tmp/southcoastscience/gps_report.json'
 
 model = "SCS Praxis/Handheld v1.0"
-status = "RUNNING"
+status_message = "RUNNING"
 
-display = SystemDisplay.construct(model, status, queue_report_filename, gps_report_filename)
+display = SystemDisplay.construct(model, status_message, True, queue_report_filename, gps_report_filename)
 print(display)
 print("-")
 
