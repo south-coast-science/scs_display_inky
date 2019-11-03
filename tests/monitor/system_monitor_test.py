@@ -22,7 +22,8 @@ model = "SCS Praxis/Handheld v1.0"
 startup_message = "STARTING"
 shutdown_message = "STANDBY"
 
-monitor = SystemMonitor.construct(model, startup_message, shutdown_message, queue_report_filename, gps_report_filename)
+monitor = SystemMonitor.construct(model, startup_message, shutdown_message, True,
+                                  queue_report_filename, gps_report_filename)
 print(monitor)
 print("-")
 

@@ -4,7 +4,8 @@ Created on 21 Jun 2019
 @author: Bruno Beloff (bruno.beloff@southcoastscience.com)
 
 example JSON:
-{"mode": "SYS", "device-name": "SCS Praxis/Handheld v1.0", "startup-message": "STARTING", "shutdown-message": "STANDBY"}
+{"mode": "SYS", "device-name": "SCS Praxis/Handheld (dev)", "startup-message": "ON", "shutdown-message": "STANDBY",
+"show-time": true}
 """
 
 from collections import OrderedDict
@@ -48,12 +49,14 @@ class DisplayConf(PersistentJSONable):
         startup_message = jdict.get('startup-message')
         shutdown_message = jdict.get('shutdown-message')
 
-        return DisplayConf(mode, device_name, startup_message, shutdown_message)
+        show_time = jdict.get('show-time', True)
+
+        return DisplayConf(mode, device_name, startup_message, shutdown_message, show_time)
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def __init__(self, mode, device_name, startup_message, shutdown_message):
+    def __init__(self, mode, device_name, startup_message, shutdown_message, show_time):
         """
         Constructor
         """
@@ -65,13 +68,15 @@ class DisplayConf(PersistentJSONable):
         self.__startup_message = startup_message
         self.__shutdown_message = shutdown_message
 
+        self.__show_time = show_time
+
 
     # ----------------------------------------------------------------------------------------------------------------
 
     def monitor(self, queue_report_filename, gps_report_filename):
         if self.mode == 'SYS':
             return SystemMonitor.construct(self.device_name, self.startup_message, self.shutdown_message,
-                                           queue_report_filename, gps_report_filename)
+                                           self.show_time, queue_report_filename, gps_report_filename)
 
         raise ValueError('unknown mode: %s' % self.mode)
 
@@ -98,6 +103,11 @@ class DisplayConf(PersistentJSONable):
         return self.__shutdown_message
 
 
+    @property
+    def show_time(self):
+        return self.__show_time
+
+
     # ----------------------------------------------------------------------------------------------------------------
 
     def as_json(self):
@@ -109,11 +119,13 @@ class DisplayConf(PersistentJSONable):
         jdict['startup-message'] = self.startup_message
         jdict['shutdown-message'] = self.shutdown_message
 
+        jdict['show-time'] = self.show_time
+
         return jdict
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
     def __str__(self, *args, **kwargs):
-        return "DisplayConf:{mode:%s, device_name:%s, startup_message:%s, shutdown_message:%s}" %  \
-               (self.mode, self.device_name, self.startup_message, self.shutdown_message)
+        return "DisplayConf:{mode:%s, device_name:%s, startup_message:%s, shutdown_message:%s, show_time:%s}" %  \
+               (self.mode, self.device_name, self.startup_message, self.shutdown_message, self.show_time)
