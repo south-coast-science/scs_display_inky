@@ -40,6 +40,9 @@ class SystemDisplay(object):
 
     __FONT = ImageFont.load_default()
 
+    __EMPTY_MESSAGE = "                      "
+
+
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
@@ -58,8 +61,10 @@ class SystemDisplay(object):
 
     # ----------------------------------------------------------------------------------------------------------------
 
+    # display = SystemDisplay.construct(device_name, startup_message, queue_report_filename, gps_report_filename)
+
     @classmethod
-    def construct(cls, device_name, system_status, queue_report_filename, gps_report_filename):
+    def construct(cls, device_name, status_message, show_time, queue_report_filename, gps_report_filename):
         datetime = LocalizedDatetime.now()
 
         tag = cls.system_tag()
@@ -67,12 +72,13 @@ class SystemDisplay(object):
 
         homes = {}
 
-        return cls(device_name, datetime, tag, host, homes, system_status, queue_report_filename, gps_report_filename)
+        return cls(device_name, datetime, tag, host, homes, status_message, show_time,
+                   queue_report_filename, gps_report_filename)
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def __init__(self, device_name, datetime, tag, host, homes, system_status,
+    def __init__(self, device_name, datetime, tag, host, homes, status_message, show_time,
                  queue_report_filename, gps_report_filename):
         """
         Constructor
@@ -82,12 +88,12 @@ class SystemDisplay(object):
         self.__tag = tag                                            # string
         self.__host = host                                          # string
         self.__homes = homes                                        # dict of port: network
-        self.__system_status = system_status                        # string
+        self.__status_message = status_message                      # string
+        self.__show_time = show_time                                # bool
 
         self.__queue_report_filename = queue_report_filename        # string
         self.__gps_report_filename = gps_report_filename            # string
 
-        self.__status = "                      "
         self.__display = TextDisplay(self.__FONT)
 
 
@@ -99,7 +105,7 @@ class SystemDisplay(object):
 
     def update(self):
         # time...
-        self.__datetime = LocalizedDatetime.now()
+        self.__datetime = LocalizedDatetime.now() if self.__show_time else None
 
         # network...
         nmcli = NMCLi.find()
@@ -107,35 +113,33 @@ class SystemDisplay(object):
         if nmcli is not None:
             self.__homes = nmcli.connections
 
-        self.__status = self.__system_status
+        message = self.__status_message
 
         # MQTT queue...
         if self.__queue_report_filename:
             queue_report = QueueReport.load(self.__queue_report_filename)
             client_status = self.__CLIENT_STATUS[queue_report.status()]
 
-            self.__status += ':' + client_status
+            message += ':' + client_status
 
         # GPS quality...
         if self.__gps_report_filename:
             gps_report = GPSDatum.load(self.__gps_report_filename)
             gps_quality = gps_report.quality
 
-            self.__status += '  GPS:' + str(gps_quality)
+            message += '  GPS:' + str(gps_quality)
 
-        return self.render()
+        return self.render(message)
 
 
     def clear(self):
         self.__datetime = None
-
         self.__homes = {}
-        self.__status = self.__system_status
 
-        return self.render()
+        return self.render(self.__status_message)
 
 
-    def render(self):
+    def render(self, message):
         self.__display.set_text(0, self.__device_name, True)
         self.__display.set_text(1, self.formatted_datetime(), True)
         self.__display.set_text(2, "")
@@ -156,7 +160,7 @@ class SystemDisplay(object):
                 break
 
         self.__display.set_text(8, "")
-        self.__display.set_text(9, self.__status, True)
+        self.__display.set_text(9, message, True)
 
         return self.__display.render()
 
@@ -164,13 +168,13 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     @property
-    def system_status(self):
-        return self.__system_status
+    def status_message(self):
+        return self.__status_message
 
 
-    @system_status.setter
-    def system_status(self, system_status):
-        self.__system_status = system_status
+    @status_message.setter
+    def status_message(self, status_message):
+        self.__status_message = status_message
 
 
     # ----------------------------------------------------------------------------------------------------------------
@@ -194,7 +198,7 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     def __str__(self, *args, **kwargs):
-        return "SystemDisplay:{device_name:%s, datetime:%s, tag:%s, host:%s, homes:%s, system_status:%s, " \
-               "queue_report_filename:%s, gps_report_filename:%s, display:%s}" % \
-               (self.__device_name, self.__datetime, self.__tag, self.__host, self.__homes, self.__system_status,
-                self.__queue_report_filename, self.__gps_report_filename, self.__display)
+        return "SystemDisplay:{device_name:%s, datetime:%s, tag:%s, host:%s, homes:%s, status_message:%s, " \
+               "show_time:%s, queue_report_filename:%s, gps_report_filename:%s, display:%s}" % \
+               (self.__device_name, self.__datetime, self.__tag, self.__host, self.__homes, self.__status_message,
+                self.__show_time, self.__queue_report_filename, self.__gps_report_filename, self.__display)
