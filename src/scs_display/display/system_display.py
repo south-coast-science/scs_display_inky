@@ -40,8 +40,6 @@ class SystemDisplay(object):
 
     __FONT = ImageFont.load_default()
 
-    __EMPTY_MESSAGE = "                      "
-
 
     # ----------------------------------------------------------------------------------------------------------------
 
@@ -60,8 +58,6 @@ class SystemDisplay(object):
 
 
     # ----------------------------------------------------------------------------------------------------------------
-
-    # display = SystemDisplay.construct(device_name, startup_message, queue_report_filename, gps_report_filename)
 
     @classmethod
     def construct(cls, device_name, status_message, show_time, queue_report_filename, gps_report_filename):
@@ -113,6 +109,7 @@ class SystemDisplay(object):
         if nmcli is not None:
             self.__homes = nmcli.connections
 
+        # message...
         message = self.__status_message
 
         # MQTT queue...
@@ -133,8 +130,8 @@ class SystemDisplay(object):
 
 
     def clear(self):
-        self.__datetime = None
-        self.__homes = {}
+        self.__datetime = None          # remove as field
+        self.__homes = {}               # remove as field
 
         return self.render(self.__status_message)
 
@@ -179,7 +176,7 @@ class SystemDisplay(object):
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def formatted_datetime(self):
+    def formatted_datetime(self):               # a class method
         if self.__datetime is None:
             return ""
 
