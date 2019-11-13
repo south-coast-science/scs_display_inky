@@ -21,7 +21,7 @@ display = SystemDisplay.construct(model, status_message, True, queue_report_file
 print(display)
 print("-")
 
-display.render()
+display.render(None, {}, "test")
 display.print()
 print("-")
 

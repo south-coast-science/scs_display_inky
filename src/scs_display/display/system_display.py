@@ -43,52 +43,59 @@ class SystemDisplay(object):
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    @classmethod
-    def system_tag(cls):
+    @staticmethod
+    def system_tag():
         id = SystemID.load(Host)
 
         return id.message_tag()
 
 
-    @classmethod
-    def system_hostname(cls):
+    @staticmethod
+    def system_hostname():
         hostname = Hostname.find()
 
         return hostname.operational
+
+
+    @staticmethod
+    def formatted_datetime(datetime):
+        if datetime is None:
+            return ""
+
+        iso = ISO8601.construct(datetime)
+
+        if iso is None:
+            return ""
+
+        return "%s %s %s" % (iso.date, iso.time, iso.timezone)
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
     def construct(cls, device_name, status_message, show_time, queue_report_filename, gps_report_filename):
-        datetime = LocalizedDatetime.now()
-
         tag = cls.system_tag()
-        host = cls.system_hostname()
+        hostname = cls.system_hostname()
 
-        homes = {}
-
-        return cls(device_name, datetime, tag, host, homes, status_message, show_time,
+        return cls(device_name, tag, hostname, status_message, show_time,
                    queue_report_filename, gps_report_filename)
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def __init__(self, device_name, datetime, tag, host, homes, status_message, show_time,
+    def __init__(self, device_name, tag, hostname, status_message, show_time,
                  queue_report_filename, gps_report_filename):
         """
         Constructor
         """
-        self.__device_name = device_name                            # string
-        self.__datetime = datetime                                  # string
-        self.__tag = tag                                            # string
-        self.__host = host                                          # string
-        self.__homes = homes                                        # dict of port: network
-        self.__status_message = status_message                      # string
-        self.__show_time = show_time                                # bool
+        self.__device_name = device_name                                    # string
+        self.__tag = tag                                                    # string
+        self.__hostname = hostname                                          # string
+        self.__status_message = status_message                              # string
+        self.__show_time = show_time                                        # bool
 
-        self.__queue_report_filename = queue_report_filename        # string
-        self.__gps_report_filename = gps_report_filename            # string
+        self.__queue_report_filename = queue_report_filename                # string
+        self.__gps_report_filename = gps_report_filename                    # string
 
         self.__display = TextDisplay(self.__FONT)
 
@@ -101,13 +108,12 @@ class SystemDisplay(object):
 
     def update(self):
         # time...
-        self.__datetime = LocalizedDatetime.now() if self.__show_time else None
+        display_datetime = self.__show_time and Host.time_is_synchronized()
+        datetime = LocalizedDatetime.now() if display_datetime else None
 
         # network...
         nmcli = NMCLi.find()
-
-        if nmcli is not None:
-            self.__homes = nmcli.connections
+        homes = {} if nmcli is None else nmcli.connections
 
         # message...
         message = self.__status_message
@@ -126,22 +132,19 @@ class SystemDisplay(object):
 
             message += '  GPS:' + str(gps_quality)
 
-        return self.render(message)
+        return self.render(datetime, homes, message)
 
 
     def clear(self):
-        self.__datetime = None          # remove as field
-        self.__homes = {}               # remove as field
-
-        return self.render(self.__status_message)
+        return self.render(None, {}, self.__status_message)
 
 
-    def render(self, message):
+    def render(self, datetime, homes, message):
         self.__display.set_text(0, self.__device_name, True)
-        self.__display.set_text(1, self.formatted_datetime(), True)
+        self.__display.set_text(1, self.formatted_datetime(datetime), True)
         self.__display.set_text(2, "")
         self.__display.set_text(3, "  tag: %s" % self.__tag)
-        self.__display.set_text(4, " host: %s" % self.__host)
+        self.__display.set_text(4, " host: %s" % self.__hostname)
         self.__display.set_text(5, "")
 
         self.__display.set_text(6, "")
@@ -149,7 +152,7 @@ class SystemDisplay(object):
 
         count = 0
 
-        for port, network in self.__homes.items():
+        for port, network in homes.items():
             self.__display.set_text(6 + count, "%5s: %s" % (port, network))
 
             count += 1
@@ -176,26 +179,12 @@ class SystemDisplay(object):
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def formatted_datetime(self):               # a class method
-        if self.__datetime is None:
-            return ""
-
-        iso = ISO8601.construct(self.__datetime)
-
-        if iso is None:
-            return ""
-
-        return "%s %s %s" % (iso.date, iso.time, iso.timezone)
-
-
     def print(self, file=sys.stdout):
         self.__display.print_buffer(file)
 
 
-    # ----------------------------------------------------------------------------------------------------------------
-
     def __str__(self, *args, **kwargs):
-        return "SystemDisplay:{device_name:%s, datetime:%s, tag:%s, host:%s, homes:%s, status_message:%s, " \
-               "show_time:%s, queue_report_filename:%s, gps_report_filename:%s, display:%s}" % \
-               (self.__device_name, self.__datetime, self.__tag, self.__host, self.__homes, self.__status_message,
-                self.__show_time, self.__queue_report_filename, self.__gps_report_filename, self.__display)
+        return "SystemDisplay:{device_name:%s, tag:%s, hostname:%s status_message:%s, show_time:%s, " \
+               "queue_report_filename:%s, gps_report_filename:%s, gps_report_filename:%s, display:%s}" % \
+               (self.__device_name, self.__tag, self.__hostname, self.__status_message, self.__show_time,
+                self.__queue_report_filename, self.__gps_report_filename, self.__gps_report_filename, self.__display)
