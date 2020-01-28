@@ -28,14 +28,13 @@ class SystemDisplay(object):
     """
     """
 
-    __CLIENT_STATUS = {
+    __QUEUE_STATE = {
         QueueStatus.NONE:               "FAULT",
         QueueStatus.INHIBITED:          "PUBLISHING INHIBITED",
         QueueStatus.WAITING:            "WAITING FOR DATA",
         QueueStatus.CONNECTING:         "CONNECTING",
         QueueStatus.PUBLISHING:         "PUBLISHING DATA",
-        QueueStatus.QUEUING:            "QUEUING DATA",
-        QueueStatus.CLEARING:           "CLEARING DATA BACKLOG"
+        QueueStatus.QUEUING:            "QUEUING DATA"
     }
 
     __FONT = ImageFont.load_default()
@@ -121,9 +120,9 @@ class SystemDisplay(object):
         # MQTT queue...
         if self.__queue_report_filename:
             queue_report = QueueReport.load(self.__queue_report_filename)
-            client_status = self.__CLIENT_STATUS[queue_report.status()]
+            queue_message = self.__QUEUE_STATE[queue_report.queue_state()]
 
-            message += ':' + client_status
+            message += ':' + queue_message
 
         # GPS quality...
         if self.__gps_report_filename:
