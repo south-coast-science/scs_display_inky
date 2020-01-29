@@ -34,7 +34,7 @@ class SystemDisplay(object):
         QueueStatus.INHIBITED:          "PUBLISHING INHIBITED",
         QueueStatus.STARTING:           "STARTING",
         QueueStatus.CONNECTING:         "CONNECTING",
-        QueueStatus.WAITING_FOR_DATA:   "WAITING TO PUBLISH",
+        QueueStatus.WAITING_FOR_DATA:   "PREPARING DATA",
         QueueStatus.PUBLISHING:         "PUBLISHING DATA",
         QueueStatus.CLEARING:           "PUBLISHING DATA",
         QueueStatus.QUEUING:            "QUEUING DATA"
