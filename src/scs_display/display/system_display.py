@@ -26,14 +26,17 @@ from scs_host.sys.nmcli import NMCLi
 
 class SystemDisplay(object):
     """
+    classdocs
     """
 
     __QUEUE_STATE = {
         QueueStatus.NONE:               "FAULT",
         QueueStatus.INHIBITED:          "PUBLISHING INHIBITED",
-        QueueStatus.WAITING:            "WAITING FOR DATA",
+        QueueStatus.STARTING:           "STARTING",
         QueueStatus.CONNECTING:         "CONNECTING",
+        QueueStatus.WAITING_FOR_DATA:   "PREPARING DATA",
         QueueStatus.PUBLISHING:         "PUBLISHING DATA",
+        QueueStatus.CLEARING:           "PUBLISHING DATA",
         QueueStatus.QUEUING:            "QUEUING DATA"
     }
 

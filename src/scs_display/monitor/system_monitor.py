@@ -24,7 +24,7 @@ class SystemMonitor(SynchronisedProcess):
     classdocs
     """
 
-    UPDATE_INTERVAL =       5.0       # seconds
+    UPDATE_INTERVAL =       4.0       # seconds
 
 
     # ----------------------------------------------------------------------------------------------------------------
