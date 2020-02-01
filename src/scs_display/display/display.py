@@ -117,7 +117,7 @@ class Display(object):
             self.__show()
 
         except TimeoutError:
-            print("Display: *** render timeout", file=sys.stderr)
+            print("Display: render timeout", file=sys.stderr)
             sys.stderr.flush()
 
         finally:
