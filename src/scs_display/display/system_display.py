@@ -8,7 +8,7 @@ import sys
 
 from PIL import ImageFont
 
-from scs_core.data.localized_datetime import LocalizedDatetime, ISO8601
+from scs_core.data.datetime import LocalizedDatetime, ISO8601
 from scs_core.data.queue_report import QueueReport, QueueStatus
 
 from scs_core.position.gps_datum import GPSDatum
