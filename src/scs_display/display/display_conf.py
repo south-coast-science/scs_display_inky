@@ -60,8 +60,6 @@ class DisplayConf(PersistentJSONable):
         """
         Constructor
         """
-        super().__init__()
-
         self.__mode = mode
 
         self.__device_name = device_name
