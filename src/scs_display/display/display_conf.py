@@ -71,12 +71,14 @@ class DisplayConf(PersistentJSONable):
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def monitor(self, software_report, queue_report_filename, gps_report_filename):
+    def monitor(self, software_report, psu_report_class, psu_report_filename, queue_report_filename,
+                gps_report_filename):
         if self.mode == 'SYS':
             device_name = self.device_name + ': ' + software_report if software_report else self.device_name
 
-            return SystemMonitor.construct(device_name, self.startup_message, self.shutdown_message,
-                                           self.show_time, queue_report_filename, gps_report_filename)
+            return SystemMonitor.construct(device_name, self.startup_message, self.shutdown_message, self.show_time,
+                                           psu_report_class, psu_report_filename, queue_report_filename,
+                                           gps_report_filename)
 
         raise ValueError('unknown mode: %s' % self.mode)
 
