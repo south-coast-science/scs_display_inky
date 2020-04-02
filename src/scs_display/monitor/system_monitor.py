@@ -24,17 +24,17 @@ class SystemMonitor(SynchronisedProcess):
     classdocs
     """
 
-    UPDATE_INTERVAL =       4.0       # seconds
+    UPDATE_INTERVAL =       5.0       # seconds
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def construct(cls, device_name, startup_message, shutdown_message, show_time,
-                  queue_report_filename, gps_report_filename):
+    def construct(cls, device_name, startup_message, shutdown_message, show_time, psu_report_class,
+                  psu_report_filename, queue_report_filename, gps_report_filename):
 
-        display = SystemDisplay.construct(device_name, startup_message, show_time,
-                                          queue_report_filename, gps_report_filename)
+        display = SystemDisplay.construct(device_name, startup_message, show_time, psu_report_class,
+                                          psu_report_filename, queue_report_filename, gps_report_filename)
 
         return cls(display, shutdown_message)
 
