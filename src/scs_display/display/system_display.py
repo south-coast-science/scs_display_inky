@@ -213,7 +213,7 @@ class BattDisplay(object):
     classdocs
     """
 
-    __LEVELS = {
+    __BARS = {
         95: '||||||||||',
         85: '-|||||||||',
         75: '--||||||||',
@@ -237,8 +237,8 @@ class BattDisplay(object):
         if self.__level is None:
             return ''
 
-        for level in self.__LEVELS.keys():
+        for level in self.__BARS.keys():
             if self.__level > level:
-                return self.__LEVELS[level]
+                return self.__BARS[level]
 
-        return self.__LEVELS[0]
+        return self.__BARS[0]
