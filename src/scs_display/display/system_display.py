@@ -75,18 +75,19 @@ class SystemDisplay(object):
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
-    def construct(cls, device_name, status_message, show_time, queue_report_filename, gps_report_filename):
+    def construct(cls, device_name, status_message, show_time, psu_report_class,
+                  psu_report_filename, queue_report_filename, gps_report_filename):
         tag = cls.system_tag()
         hostname = cls.system_hostname()
 
-        return cls(device_name, tag, hostname, status_message, show_time,
-                   queue_report_filename, gps_report_filename)
+        return cls(device_name, tag, hostname, status_message, show_time, psu_report_class,
+                   psu_report_filename, queue_report_filename, gps_report_filename)
 
 
     # ----------------------------------------------------------------------------------------------------------------
 
-    def __init__(self, device_name, tag, hostname, status_message, show_time,
-                 queue_report_filename, gps_report_filename):
+    def __init__(self, device_name, tag, hostname, status_message, show_time, psu_report_class,
+                 psu_report_filename, queue_report_filename, gps_report_filename):
         """
         Constructor
         """
@@ -96,6 +97,9 @@ class SystemDisplay(object):
         self.__status_message = status_message                              # string
         self.__show_time = show_time                                        # bool
 
+        self.__psu_report_class = psu_report_class                          # PSUStatus implementation
+
+        self.__psu_report_filename = psu_report_filename                    # string
         self.__queue_report_filename = queue_report_filename                # string
         self.__gps_report_filename = gps_report_filename                    # string
 
@@ -120,6 +124,13 @@ class SystemDisplay(object):
         # message...
         message = self.__status_message
 
+        # PSU...
+        if self.__psu_report_filename:
+            psu_report = self.__psu_report_class.load(self.__psu_report_filename)
+            batt_percent = None if psu_report is None else psu_report.batt_percent
+        else:
+            batt_percent = None
+
         # MQTT queue...
         if self.__queue_report_filename:
             queue_report = QueueReport.load(self.__queue_report_filename)
@@ -134,17 +145,17 @@ class SystemDisplay(object):
 
             message += '  GPS:' + str(gps_quality)
 
-        return self.render(datetime, homes, message)
+        return self.render(datetime, BattDisplay(batt_percent), homes, message)
 
 
     def clear(self):
-        return self.render(None, {}, self.__status_message)
+        return self.render(None, '', {}, self.__status_message)
 
 
-    def render(self, datetime, homes, message):
+    def render(self, datetime, batt, homes, message):
         self.__display.set_text(0, self.__device_name, True)
         self.__display.set_text(1, self.formatted_datetime(datetime), True)
-        self.__display.set_text(2, "")
+        self.__display.set_text(2, batt, True)
         self.__display.set_text(3, "  tag: %s" % self.__tag)
         self.__display.set_text(4, " host: %s" % self.__hostname)
         self.__display.set_text(5, "")
@@ -153,12 +164,11 @@ class SystemDisplay(object):
         self.__display.set_text(7, "")
 
         count = 0
-
         for port, network in homes.items():
             self.__display.set_text(6 + count, "%5s: %s" % (port, network))
 
             count += 1
-            if count > 1:
+            if count > 1:           # maximum 2 homes
                 break
 
         self.__display.set_text(8, "")
@@ -186,7 +196,49 @@ class SystemDisplay(object):
 
 
     def __str__(self, *args, **kwargs):
+        psu_report_class_name = self.__psu_report_class.__name__
+
         return "SystemDisplay:{device_name:%s, tag:%s, hostname:%s status_message:%s, show_time:%s, " \
-               "queue_report_filename:%s, gps_report_filename:%s, gps_report_filename:%s, display:%s}" % \
+               "psu_report_class:%s, psu_report_filename:%s, queue_report_filename:%s, " \
+               "gps_report_filename:%s, display:%s}" % \
                (self.__device_name, self.__tag, self.__hostname, self.__status_message, self.__show_time,
-                self.__queue_report_filename, self.__gps_report_filename, self.__gps_report_filename, self.__display)
+                psu_report_class_name, self.__psu_report_filename, self.__queue_report_filename,
+                self.__gps_report_filename, self.__display)
+
+
+# --------------------------------------------------------------------------------------------------------------------
+
+class BattDisplay(object):
+    """
+    classdocs
+    """
+
+    __LEVELS = {
+        95: '||||||||||',
+        85: '-|||||||||',
+        75: '--||||||||',
+        65: '---|||||||',
+        55: '----||||||',
+        45: '-----|||||',
+        35: '------||||',
+        25: '-------|||',
+        15: '--------||',
+        5:  '---------|',
+        0:  '----------'
+    }
+
+    # ----------------------------------------------------------------------------------------------------------------
+
+    def __init__(self, level):
+        self.__level = level
+
+
+    def __str__(self, *args, **kwargs):
+        if self.__level is None:
+            return ''
+
+        for level in self.__LEVELS.keys():
+            if self.__level > level:
+                return self.__LEVELS[level]
+
+        return self.__LEVELS[0]

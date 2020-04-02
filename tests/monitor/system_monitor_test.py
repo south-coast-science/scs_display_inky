@@ -15,6 +15,7 @@ from scs_display.monitor.system_monitor import SystemMonitor, SystemStatus
 
 # --------------------------------------------------------------------------------------------------------------------
 
+psu_report_filename = '/tmp/southcoastscience/psu_report.json'
 queue_report_filename = '/tmp/southcoastscience/mqtt_queue_report.json'
 gps_report_filename = '/tmp/southcoastscience/gps_report.json'
 
@@ -22,8 +23,8 @@ model = "SCS Praxis/Handheld v1.0"
 startup_message = "STARTING"
 shutdown_message = "STANDBY"
 
-monitor = SystemMonitor.construct(model, startup_message, shutdown_message, True,
-                                  queue_report_filename, gps_report_filename)
+monitor = SystemMonitor.construct(model, startup_message, shutdown_message, True, None,
+                                  psu_report_filename, queue_report_filename, gps_report_filename)
 print(monitor)
 print("-")
 
