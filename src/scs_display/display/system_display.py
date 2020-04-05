@@ -77,6 +77,7 @@ class SystemDisplay(object):
     @classmethod
     def construct(cls, device_name, status_message, show_time, psu_report_class,
                   psu_report_filename, queue_report_filename, gps_report_filename):
+
         tag = cls.system_tag()
         hostname = cls.system_hostname()
 
