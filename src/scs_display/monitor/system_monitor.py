@@ -26,7 +26,6 @@ class SystemMonitor(SynchronisedProcess):
 
     UPDATE_INTERVAL =       5.0       # seconds
 
-
     # ----------------------------------------------------------------------------------------------------------------
 
     @classmethod
